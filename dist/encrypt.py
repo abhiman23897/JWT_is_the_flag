@@ -9,7 +9,7 @@ with open('filekey.key', 'rb') as filekey:
 fernet = Fernet(key)
  
 # opening the original file to encrypt
-with open('app.zip', 'rb') as file:
+with open('../app.py', 'rb') as file:
     original = file.read()
      
 # encrypting the file
@@ -17,5 +17,5 @@ encrypted = fernet.encrypt(original)
  
 # opening the file in write mode and
 # writing the encrypted data
-with open('app.zip', 'wb') as encrypted_file:
+with open('app.py', 'wb') as encrypted_file:
     encrypted_file.write(encrypted)
