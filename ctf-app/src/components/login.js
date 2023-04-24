@@ -27,7 +27,8 @@ function Login() {
       localStorage.setItem('token', token);
       navigate('/dashboard');
     } catch (error) {
-      setErrorMessage('Invalid username or password');
+      setErrorMessage(error.response.data.msg);
+      alert(errorMessage);
     }
   }
 

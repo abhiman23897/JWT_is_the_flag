@@ -27,18 +27,23 @@ def login():
     access_token = create_access_token(identity=username, additional_headers=user)
     return jsonify({'access_token': access_token}), 200
 
+ITEM_LIST = ['Apple', 'Banana', 'Car', 'Dog', 'Elephant', 'Flag', 'Grapes', 'House', 'Icecream', 'Jacket', 'Kangaroo', 'Lion', 'Mango', 'Nest', 'Orange', 'Pencil', 'Queen', 'Rainbow', 'Sun', 'Tree', 'Umbrella', 'Van', 'Watch', 'Xylophone', 'Yak', 'Zebra']
+
 @app.route('/api/items', methods=['GET'])
 @jwt_required()
 def items():
-    items = ['Apple', 'Banana', 'Car', 'Dog', 'Elephant', 'Flag', 'Grapes', 'House', 'Ice cream', 'Jacket', 'Kangaroo', 'Lion', 'Mango', 'Nest', 'Orange', 'Pencil', 'Queen', 'Rainbow', 'Sun', 'Tree', 'Umbrella', 'Van', 'Watch', 'Xylophone', 'Yak', 'Zebra']
+    items = ITEM_LIST
     return items, 200
 
 @app.route('/api/items/<item>', methods=['GET'])
 @jwt_required()
 def get_item(item):
     headers = get_jwt_header()
+    if item not in ITEM_LIST:
+        return jsonify({'msg': 'Item not found'}), 404
+    
     if item == "Flag" and not headers['is_admin']:
-            return jsonify({'msg': 'You do not have sufficient privileges to access this resource'}), 403
+        return jsonify({'msg': 'You do not have sufficient privileges to access this resource'}), 403
     
     return send_file(f'static/{item.lower()}.png', mimetype='image/png')
 
