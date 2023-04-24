@@ -1,13 +1,12 @@
-from functools import wraps
-from flask import Flask, jsonify, make_response, redirect, render_template, request, url_for
+from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token, get_jwt_header
 )
 
 app = Flask(__name__)
-app.config['JWT_SECRET_KEY'] = '1234' # weak secret key for example purposes
 jwt = JWTManager(app)
+CORS(app)
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -16,6 +15,8 @@ def login():
     if not username or not password:
         return jsonify({'msg': 'Missing username or password'}), 400
     if not username.isalnum() or not password.isalnum():
+        return jsonify({'msg': 'Invalid username or password'}), 401
+    if not len(username) == 10:
         return jsonify({'msg': 'Invalid username or password'}), 401
     if password != username[::-1]:
         return jsonify({'msg': 'Invalid username or password'}), 401
@@ -29,22 +30,22 @@ def login():
 @app.route('/api/items', methods=['GET'])
 @jwt_required()
 def items():
-    items = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+    items = ['Apple', 'Banana', 'Car', 'Dog', 'Elephant', 'Flag', 'Grapes', 'House', 'Ice cream', 'Jacket', 'Kangaroo', 'Lion', 'Mango', 'Nest', 'Orange', 'Pencil', 'Queen', 'Rainbow', 'Sun', 'Tree', 'Umbrella', 'Van', 'Watch', 'Xylophone', 'Yak', 'Zebra']
     return items, 200
 
 @app.route('/api/items/<item>', methods=['GET'])
 @jwt_required()
 def get_item(item):
-    return item, 200
-
-@app.route('/flag', methods=['GET'])
-@jwt_required()
-def flag():
     headers = get_jwt_header()
-    if not headers['is_admin']:
-        return jsonify({'msg': 'You do not have sufficient privileges to access this resource'}), 403
-    return jsonify({'flag': 'CTF{example_flag}'}), 200
+    if item == "Flag" and not headers['is_admin']:
+            return jsonify({'msg': 'You do not have sufficient privileges to access this resource'}), 403
+    
+    return send_file(f'static/{item.lower()}.png', mimetype='image/png')
 
-CORS(app)
+
+#TODO: Move this to a config file
+app.config['JWT_SECRET_KEY'] = 'super_secret_key@123'
+
 if __name__ == '__main__':
+    print(app.config)
     app.run(host='localhost', port=5000)
