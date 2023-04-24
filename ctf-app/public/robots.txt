@@ -1,0 +1,4 @@
+# https://www.robotstxt.org/robotstxt.html
+# Sorry, no flag here. :D
+User-agent: *
+Disallow:
