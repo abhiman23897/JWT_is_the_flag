@@ -18,5 +18,5 @@ decrypted = fernet.decrypt(encrypted)
  
 # opening the file in write mode and
 # writing the decrypted data
-with open('dec_app.py', 'wb') as decrypted_file:
+with open('app.py', 'wb') as decrypted_file:
     decrypted_file.write(decrypted)
