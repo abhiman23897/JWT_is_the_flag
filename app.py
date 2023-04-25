@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, send_file
+from flask import Flask, jsonify, request, send_file, send_from_directory
 from flask_cors import CORS
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token, get_jwt_header
@@ -7,6 +7,26 @@ from flask_jwt_extended import (
 app = Flask(__name__)
 jwt = JWTManager(app)
 CORS(app)
+
+@app.route('/')
+def index():
+    return app.send_static_file('index.html')
+
+@app.route('/static/<path:path>')
+def serve_static(path):
+    return send_from_directory(app.static_folder, path)
+
+@app.route('/manifest.json')
+def manifest():
+    return app.send_static_file('manifest.json')
+
+@app.route('/favicon.ico')
+def favicon():
+    return app.send_static_file('favicon.ico')
+
+@app.route('/robots.txt')
+def robots():
+    return app.send_static_file('robots.txt')
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -45,11 +65,11 @@ def get_item(item):
     if item == "Flag" and not headers['is_admin']:
         return jsonify({'msg': 'You do not have sufficient privileges to access this resource'}), 403
     
-    return send_file(f'static/{item.lower()}.png', mimetype='image/png')
+    return send_file(f'images/{item.lower()}.png', mimetype='image/png')
 
 
 #TODO: Move this to a config file
 app.config['JWT_SECRET_KEY'] = 'super_secret_key@123'
 
 if __name__ == '__main__':
-    app.run(host='localhost', port=5000)
+    app.run(host='0.0.0.0', port=5000)
