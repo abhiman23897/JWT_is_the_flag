@@ -16,7 +16,7 @@ The frontend for this code has been setup using React.js. However, this does not
 - Decrypt the source_code.zip to find out how to login to the application
 - Username and password can be any alphanumeric string of 10 characters to login.
 - On logging in, non admin JWT token will be generated and provided to user. 
-- Inpsect app.py in the source code to find the JWT secret key - super_secret_key@123
+- Inspect app.py in the source code to find the JWT secret key - super_secret_key@123
 - Using this, encode new JWT token with same payload and headers, except for is_admin being set to true.
 - Use new token to view flag content.
 
