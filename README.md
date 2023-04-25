@@ -12,6 +12,10 @@ For the user to become aware of the flaw in the design of JWT in this CTF, they 
 
 The frontend for this code has been setup using React.js. However, this does not play much role in capturing the flag. Hence, React.js knowledge is absolutely not required.
 
+## How to run
+
+- Use the following command in the directory of the repository: ```docker-compose up --build -d```
+
 ## Solution
 - Decrypt the source_code.zip to find out how to login to the application
 - Username and password can be any alphanumeric string of 10 characters to login.
